@@ -1,5 +1,5 @@
 # ROS Interfaces for VESC Motor Drivers
-#install
+## install
 ```shell
 bash installVESCrosNode.bash
 ```
