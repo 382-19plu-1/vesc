@@ -50,6 +50,12 @@ VescDriver::VescDriver(ros::NodeHandle nh, ros::NodeHandle private_nh)
   , fw_version_major_(-1)
   , fw_version_minor_(-1)
 {
+    
+  // Node Name
+  std::string nodeName = ros::this_node::getName();
+  nodeName = nodeName.substr(1);
+  ROS_INFO("Node:%s.", nodeName.c_str());
+  
   // get vesc serial port address
   std::string port;
   if (!private_nh.getParam("port", port))
@@ -72,19 +78,19 @@ VescDriver::VescDriver(ros::NodeHandle nh, ros::NodeHandle private_nh)
   }
 
   // create vesc state (telemetry) publisher
-  state_pub_ = nh.advertise<vesc_msgs::VescStateStamped>("sensors/core", 10);
+  state_pub_ = nh.advertise<vesc_msgs::VescStateStamped>(nodeName + "/sensors/core", 10);
 
   // since vesc state does not include the servo position, publish the commanded
   // servo position as a "sensor"
   servo_sensor_pub_ = nh.advertise<std_msgs::Float64>("sensors/servo_position_command", 10);
 
   // subscribe to motor and servo command topics
-  duty_cycle_sub_ = nh.subscribe("commands/motor/duty_cycle", 10, &VescDriver::dutyCycleCallback, this);
-  current_sub_ = nh.subscribe("commands/motor/current", 10, &VescDriver::currentCallback, this);
-  brake_sub_ = nh.subscribe("commands/motor/brake", 10, &VescDriver::brakeCallback, this);
-  speed_sub_ = nh.subscribe("commands/motor/speed", 10, &VescDriver::speedCallback, this);
-  position_sub_ = nh.subscribe("commands/motor/position", 10, &VescDriver::positionCallback, this);
-  servo_sub_ = nh.subscribe("commands/servo/position", 10, &VescDriver::servoCallback, this);
+  duty_cycle_sub_ = nh.subscribe(nodeName + "/commands/motor/duty_cycle", 10, &VescDriver::dutyCycleCallback, this);
+  current_sub_ = nh.subscribe(nodeName + "/commands/motor/current", 10, &VescDriver::currentCallback, this);
+  brake_sub_ = nh.subscribe(nodeName + "/commands/motor/brake", 10, &VescDriver::brakeCallback, this);
+  speed_sub_ = nh.subscribe(nodeName + "/commands/motor/speed", 10, &VescDriver::speedCallback, this);
+  position_sub_ = nh.subscribe(nodeName + "/commands/motor/position", 10, &VescDriver::positionCallback, this);
+  servo_sub_ = nh.subscribe(nodeName + "/commands/servo/position", 10, &VescDriver::servoCallback, this);
 
   // create a 50Hz timer, used for state machine & polling VESC telemetry
   timer_ = nh.createTimer(ros::Duration(1.0 / 50.0), &VescDriver::timerCallback, this);
