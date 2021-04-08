@@ -1,0 +1,38 @@
+<!-- -*- mode: XML -*- -->
+<launch>
+  <!-- VESC driver name -->
+  <arg name="node0_name" default="vesc_node0" />
+  <arg name="node1_name" default="vesc_node1" />
+
+
+  <!-- Optionally launch in GDB, for debugging -->
+  <arg name="debug" default="false" />
+  <arg if="$(arg debug)" name="launch_prefix" value="xterm -e gdb --args" />
+  <arg unless="$(arg debug)" name="launch_prefix" value="" />
+
+  <!-- VESC driver parameters -->
+  <arg name="port0" default="/dev/ttyACM0" />
+  <arg name="port1" default="/dev/ttyACM1" />
+
+  <!-- VESC driver node -->
+  <!-- Node 0 -->
+  <node pkg="vesc_driver" type="vesc_driver_node" name="$(arg node0_name)"
+        output="screen" launch-prefix="$(arg launch_prefix)" >
+	  <!-- Remap Sub name -->
+	  <!--remap from="commands" to="vesc_node0" /-->
+	  <!-- Remap Pub name -->
+	  <!--remap from="sensors" to="vesc_node0_reading" /-->
+    <param name="port" value="$(arg port0)" />
+  </node>
+
+  <!-- Node 1 -->
+  <node pkg="vesc_driver" type="vesc_driver_node" name="$(arg node1_name)"
+        output="screen" launch-prefix="$(arg launch_prefix)" >
+	  <!-- Remap Sub name -->
+    <!--remap from="commands" to="vesc_node1/commands" /-->
+    <!-- Remap Pub name -->
+    <!--remap from="sensors" to="vesc_node1_reading/sensors" /-->
+    <param name="port" value="$(arg port1)" />
+  </node>
+
+</launch>
