@@ -1,5 +1,5 @@
-# VESC
-## ROS Interfaces for VESC Motor Drivers
+# ROS Interfaces for VESC Motor Drivers
+
 
 <!-- TODO: CI setting -->
 
