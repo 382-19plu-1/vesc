@@ -32,15 +32,15 @@ if [ "${test}" == "focal" ]; then
                 make install
         fi
 else
-  apt-get install -y ros-$ROS_DISTRO-ros-serial;
+  sudo apt-get install -y ros-$ROS_DISTRO-serial;
 fi
 
 # intall other dependent
-apt-get install -y ros-$ROS_DISTRO-ros-control ros-$ROS_DISTRO-hardware-interface ros-$ROS_DISTRO-controller-manager;
+sudo apt-get install -y ros-$ROS_DISTRO-ros-control ros-$ROS_DISTRO-hardware-interface ros-$ROS_DISTRO-controller-manager;
 
 #complie the package
 source ~/catkin_ws/devel/setup.bash;
-cd ~/catkin_ws/src;
+cd ~/catkin_ws;
 catkin_make vesc_msgs;
 catkin_make;
 
